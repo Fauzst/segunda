@@ -1,0 +1,11 @@
+# Ignore .env files (commonly used for sensitive data like API keys)
+.env
+
+# Ignore node_modules directory
+segunda/node_modules/
+
+# Ignore log files
+*.log
+
+# Ignore the build folder (e.g., for React or other front-end apps)
+build/
