@@ -19,17 +19,19 @@ export function SignupForm({
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
+    const [role, setRole] = useState('');
 
-    const submitSignup = async (e) => {
+    const submitSignup = async (e:any) => {
         e.preventDefault();
     
         const data = {
             email,
-            password
+            password,
+            role
         };
     
         try {
-            const response = await fetch('http://localhost/api/signup.php', {
+            const response = await fetch('http://localhost/cognate/segunda/src/api/signup/signup.php', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -37,15 +39,15 @@ export function SignupForm({
                 body: JSON.stringify(data),
             });
     
-            const responseText = await response.text(); // Get the response body as text
+            const responseText = await response.text(); 
     
-            console.log('Response Text:', responseText); // Log the response body
+            console.log('Response Text:', responseText); 
     
             if (!response.ok) {
                 throw new Error('Failed to fetch');
             }
     
-            const result = JSON.parse(responseText); // Try parsing the response text to JSON
+            const result = JSON.parse(responseText); 
     
             if (result.status === 'success') {
                 setSuccess(result.message);
@@ -74,37 +76,71 @@ export function SignupForm({
                   Create new account
                 </p>
               </div>
-              <div className="grid gap-2">
-                <Label htmlFor="email">Email</Label>
-                <Input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="m@example.com"
-                  required
-                />
-              </div>
-              <div className="grid gap-2">
-                <div className="flex items-center">
-                  <Label htmlFor="password">Password</Label>
-                  <a
-                    href="#"
-                    className="ml-auto text-sm underline-offset-2 hover:underline"
-                  >
-                 
-                  </a>
-                </div>
-                <Input 
-                    id="password" 
-                    type="password" 
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required />
-              </div>
-              <Button type="submit" className="w-full" onClick={submitSignup}>
-                Signup
-              </Button>
+
+              { !role &&
+                <>
+                  <div className="flex flex-row items-center text-center gap-3">
+                    <div 
+                      className="bg-primary p-2 text-secondary font-semibold rounded"
+                      onClick={() => {
+                        setRole('User');
+                      }}
+                    >Signup as a User</div>
+                    <div 
+                      className="bg-secondary text-primary p-2 border-2 border-primary rounded"
+                      onClick={() => {
+                        setRole('Seller');
+                      }}
+                    >Signup as a Seller</div>
+                  </div>
+                </>
+              }
+
+              { role &&
+                  <>
+                      <div className="grid gap-2">
+                    <Label htmlFor="email">Email</Label>
+                    <Input
+                      id="email"
+                      type="email"
+                      value={email}
+                      onChange={(e) => setEmail(e.target.value)}
+                      placeholder="m@example.com"
+                      required
+                    />
+                  </div>
+                  <div className="grid gap-2">
+                    <div className="flex items-center">
+                      <Label htmlFor="password">Password</Label>
+                      <a
+                        href="#"
+                        className="ml-auto text-sm underline-offset-2 hover:underline"
+                      >
+                    
+                      </a>
+                    </div>
+                    <Input 
+                        id="password" 
+                        type="password" 
+                        value={password}
+                        onChange={(e) => setPassword(e.target.value)}
+                        required />
+                  </div>
+                  <Button type="submit" className="w-full" onClick={submitSignup}>
+                    Signup
+                  </Button>
+                  <div className="text-center text-sm">
+                    Back to <a 
+                      href="" 
+                      className="underline"
+                      onClick={() => {
+                        setRole('');
+                      }}
+                    >Role Selection</a><br />
+                  </div>
+                </>
+              }
+
               <div className="text-center text-sm">
                 Alrady have an account?{" "}
                 <a href="/" className="underline underline-offset-4">

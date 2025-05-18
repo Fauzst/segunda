@@ -6,18 +6,28 @@ header("Access-Control-Allow-Methods: POST, GET, OPTIONS, DELETE, PUT");
 header("Access-Control-Allow-Headers: Content-Type, Authorization");
 
 
-// Include the Database class
-require_once __DIR__ . '/database.php'; // Adjust this path accordingly
+require_once __DIR__ . '/../database/database.php'; 
+require_once __DIR__ . '/send_otp.php';
 
+$path = __DIR__ . '/../../../../.env';
 $data = json_decode(file_get_contents("php://input"));
 
-if (!isset($data->email, $data->password)) {
+if (!isset($data->email, $data->password, $data->role)) {
     echo json_encode(['status' => 'error', 'message' => 'Email and password are required']);
     exit;
 }
 
 $email = $data->email;
 $password = password_hash($data->password, PASSWORD_BCRYPT);
+$role = $data->role;
+
+$otp_sender = new Send_otp($path);
+$otp_sender->sendOTP($email);
+$result = $otp_sender->sendOTP($email);
+
+exit;
+
+/*
 
 // Initialize and connect
 $db = new Database();
@@ -48,5 +58,6 @@ echo 'DB_NAME: ' . getenv('DB_NAME') . '<br>';
 echo 'DB_USER: ' . getenv('DB_USER') . '<br>';
 echo 'DB_PASS: ' . getenv('DB_PASS') . '<br>';
 
+*/
 
 ?>
